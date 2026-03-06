@@ -22,6 +22,7 @@ function setup() {
   angleMode(DEGREES);
   xspeed = random(1.2, 1.5);
   yspeed = random(1.2, 1.5);
+  console.log("this is the right fish")
 }
 
 function draw() {
