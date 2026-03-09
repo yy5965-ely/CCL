@@ -32,9 +32,14 @@ let bgPos = 0;
 function setup() {
   let canvas = createCanvas(800, 500);
   canvas.parent("p5-canvas-container");
+
+  canvas.mouseOver(function() {
+    mouseIn = true;
+  });
   
-  canvas.mouseOver(() => { mouseIn = true; });
-  canvas.mouseOut(() => { mouseIn = false; });
+  canvas.mouseOut(function() {
+    mouseIn = false;
+  });
 
   background(5, 5, 15);
   angleMode(DEGREES);
@@ -54,10 +59,12 @@ function draw() {
   } else {
     waterFlow = lerp(waterFlow, 0, 0.02);
   }
+  
   bgPos += waterFlow;
 
   push();
   noStroke();
+  
   for (let i = 0; i < 60; i++) {
     let p = 1 + (i % 3) * 0.3; 
     let startX = ((i * 73 + bgPos * p) % 800 + 800) % 800;
@@ -71,6 +78,7 @@ function draw() {
     
     let tType = i % 3; 
     let sBase = 0;
+    
     if (tType == 0) {
       sBase = 1.8;
     } else if (tType == 1) {
@@ -127,8 +135,12 @@ function draw() {
     activeLevel -= 0.005; 
   }
 
-  if (activeLevel > 1) activeLevel = 1;
-  if (activeLevel < 0) activeLevel = 0;
+  if (activeLevel > 1) {
+    activeLevel = 1;
+  }
+  if (activeLevel < 0) {
+    activeLevel = 0;
+  }
 
   oldMx = mouseX;
   oldMy = mouseY;
@@ -145,9 +157,11 @@ function draw() {
   }
 
   let spd = map(activeLevel, 0, 1, 1.0, 6.0); 
+  
   if (magicTime > 0) {
     spd = 2.0; 
   }
+  
   breathe += spd;
 
   if (magicTime > 0) {
@@ -159,8 +173,13 @@ function draw() {
   }
 
   jx += waterFlow * 0.6;
-  if (jx < 40) jx = 40;
-  if (jx > 760) jx = 760;
+  
+  if (jx < 40) {
+    jx = 40;
+  }
+  if (jx > 760) {
+    jx = 760;
+  }
 }
 
 function mousePressed() {
@@ -193,8 +212,14 @@ function doMagic() {
   
   let ta = 180;
   let df = ta - myAngle;
-  while (df < -180) df += 360;
-  while (df > 180) df -= 360;
+  
+  while (df < -180) {
+    df += 360;
+  }
+  while (df > 180) {
+    df -= 360;
+  }
+  
   myAngle += df * 0.03;
   
   let st = 0.5;
@@ -213,14 +238,22 @@ function normalMove() {
 
   let tf = map(activeLevel, 0, 1, 0.002, 0.08);
   
-  if (jx < 100) accX += tf;
-  if (jx > 700) accX -= tf;
-  if (jy < 50) accY += tf;
+  if (jx < 100) {
+    accX += tf;
+  }
+  if (jx > 700) {
+    accX -= tf;
+  }
+  if (jy < 50) {
+    accY += tf;
+  }
   
   if (activeLevel > 0.1) {
-     if (jy > 360) accY -= tf;
+    if (jy > 360) {
+      accY -= tf;
+    }
   } else {
-     vy += 0.006; 
+    vy += 0.006; 
   }
 
   vx += accX;
@@ -240,7 +273,9 @@ function normalMove() {
 
   if (jy > 360) {
     jy = 360;
-    if (vy > 0) vy *= 0.5; 
+    if (vy > 0) {
+      vy *= 0.5; 
+    }
     if (activeLevel < 0.05) {
       vx = sin(frameCount * 0.5) * 0.3;
     }
@@ -266,8 +301,12 @@ function followM() {
 
   let d = dist(jx, jy, mouseX, mouseY);
   let cf = map(d, 0, 400, 1, 0);
-  if (cf > 1) cf = 1;
-  if (cf < 0) cf = 0;
+  if (cf > 1) {
+    cf = 1;
+  }
+  if (cf < 0) {
+    cf = 0;
+  }
 
   let hx = sin(frameCount * 1.5) * 250 * activeLevel * cf;
   let hy = cos(frameCount * 2.2) * 180 * activeLevel * cf;
@@ -277,6 +316,7 @@ function followM() {
 
   let ox = jx;
   let oy = jy;
+  
   jx = lerp(jx, tx, am);
   jy = lerp(jy, ty, am);
 
@@ -313,8 +353,13 @@ function calcAngle() {
   let ta = atan2(fx, fy);
   
   let df = ta - myAngle;
-  while (df < -180) df += 360;
-  while (df > 180) df -= 360;
+  
+  while (df < -180) {
+    df += 360;
+  }
+  while (df > 180) {
+    df -= 360;
+  }
   
   let ts = map(activeLevel, 0, 1, 0.015, 0.1);
   myAngle += df * ts;
@@ -334,9 +379,14 @@ function drawJelly(xPos, yPos, s, con) {
     let a = map(i, 0, 150, 0, 360);
     
     let rb = map(activeLevel, 0.6, 1, 0, 85);
-    if (rb < 0) rb = 0;
+    if (rb < 0) {
+      rb = 0;
+    }
+    
     let bd = map(activeLevel, 0.6, 1, 0, 115);
-    if (bd < 0) bd = 0;
+    if (bd < 0) {
+      bd = 0;
+    }
     
     let rn = map(sin(a + t), -1, 1, 80 + rb, 180 + rb);
     let gn = map(cos(a - t), -1, 1, 120, 220);
@@ -356,9 +406,24 @@ function drawJelly(xPos, yPos, s, con) {
     let gs1 = map(leaf, 0, 1, 40, 160);
     let bs1 = map(sin(a * 3 + t * 5), -1, 1, 200, 255);
     
-    if (rs1 > 255) rs1 = 255; if (rs1 < 0) rs1 = 0;
-    if (gs1 > 255) gs1 = 255; if (gs1 < 0) gs1 = 0;
-    if (bs1 > 255) bs1 = 255; if (bs1 < 0) bs1 = 0;
+    if (rs1 > 255) {
+      rs1 = 255;
+    }
+    if (rs1 < 0) {
+      rs1 = 0;
+    }
+    if (gs1 > 255) {
+      gs1 = 255;
+    }
+    if (gs1 < 0) {
+      gs1 = 0;
+    }
+    if (bs1 > 255) {
+      bs1 = 255;
+    }
+    if (bs1 < 0) {
+      bs1 = 0;
+    }
     
     let rf = lerp(rn, rs1, magicPower);
     let gf = lerp(gn, gs1, magicPower);
