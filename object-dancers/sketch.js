@@ -70,7 +70,7 @@ class TeddyBearDancer {
 
     translate(0, this.bounceY);
     rotate(this.tiltAngle);
-    scale(0.65); 
+    scale(0.45); 
 
     stroke(this.strokeColor);
     strokeWeight(1.5);
