@@ -46,6 +46,10 @@ class TeddyBearDancer {
     this.rightArmAngle = 0;
     this.leftLegAngle = 0;
     this.rightLegAngle = 0;
+    this.baseEyeHeight = 12;
+    this.currentEyeHeight = this.baseEyeHeight;
+    this.blinkState = "open";
+    this.blinkTimer = random(60, 120);
   }
   update() {
     // update properties here to achieve
@@ -57,6 +61,26 @@ class TeddyBearDancer {
     this.rightArmAngle = cos(this.time * 2) * 0.4;
     this.leftLegAngle = sin(this.time * 2 + PI) * 0.2;
     this.rightLegAngle = cos(this.time * 2 + PI) * 0.2;
+    
+    if (this.blinkState == "open") {
+      this.blinkTimer--;
+      if (this.blinkTimer <= 0) {
+        this.blinkState = "closing";
+      }
+    } else if (this.blinkState == "closing") {
+      this.currentEyeHeight -= 3;
+      if (this.currentEyeHeight <= 1) {
+        this.currentEyeHeight = 1;
+        this.blinkState = "opening";
+      }
+    } else if (this.blinkState == "opening") {
+      this.currentEyeHeight += 3;
+      if (this.currentEyeHeight >= this.baseEyeHeight) {
+        this.currentEyeHeight = this.baseEyeHeight;
+        this.blinkState = "open";
+        this.blinkTimer = random(60, 120);
+      }
+    }
   }
   display() {
     // the push and pop, along with the translate 
@@ -70,7 +94,7 @@ class TeddyBearDancer {
 
     translate(0, this.bounceY);
     rotate(this.tiltAngle);
-    scale(0.45); 
+    scale(0.65); 
 
     stroke(this.strokeColor);
     strokeWeight(1.5);
@@ -115,8 +139,8 @@ class TeddyBearDancer {
     
     noStroke();
     fill(30); 
-    ellipse(-25, -70, 12, 12); 
-    ellipse(25, -70, 12, 12);  
+    ellipse(-25, -70, 12, this.currentEyeHeight); 
+    ellipse(25, -70, 12, this.currentEyeHeight);  
     
     ellipse(0, -55, 25, 18);  
     
