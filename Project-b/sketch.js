@@ -9,6 +9,8 @@ let imgBottleEmpty, imgBottleWatering;
 
 let sndLeaves, sndCat, sndWater, sndBee, sndSquirrel;
 
+let isSystemPaused = false;
+
 function preload() {
   imgSky = loadImage('sky.png');
   imgNight = loadImage('night.png'); 
@@ -66,6 +68,8 @@ function draw() {
   let hoverType = false;
   let activeHoverItem = null;
   
+  isSystemPaused = false;
+  
   for (let i = items.length - 1; i >= 0; i--) {
     if (items[i].checkHover) {
       let res = items[i].checkHover(mouseX, mouseY);
@@ -79,6 +83,8 @@ function draw() {
 
   if (mouseIsPressed) {
     if (activeHoverItem) {
+      isSystemPaused = true; 
+
       let snd = getSoundForInteraction(activeHoverItem, hoverType);
       if (snd) {
         snd.setLoop(true); 
@@ -86,8 +92,8 @@ function draw() {
           snd.play();
         }
       }
-      
-      if (frameCount % 4 === 0) {
+
+      if (frameCount % 15 === 0) {
          if (activeHoverItem.name !== 'Squirrel') {
              activeHoverItem.interact(mouseX, mouseY);
          }
@@ -441,9 +447,12 @@ class Cat {
     this.wagTimer = 0; 
   }
   update() {
-    this.health = this.health - 0.02;
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02;
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -484,7 +493,7 @@ class Cat {
     }
   }
   water() { 
-    this.health = this.health + 25; 
+    this.health = this.health + 1.5; // 回血降至极慢
     if (this.health > 100) {
       this.health = 100;
     }
@@ -558,9 +567,12 @@ class Squirrel {
     this.particles = [];
   }
   update() {
-    this.health = this.health - 0.02;
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02;
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -589,7 +601,7 @@ class Squirrel {
     }
   }
   water() { 
-    this.health = this.health + 25; 
+    this.health = this.health + 1.5; 
     if (this.health > 100) {
       this.health = 100;
     }
@@ -673,9 +685,12 @@ class Pond {
     this.ripples = [];   
   }
   update() {
-    this.health = this.health - 0.02; 
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02; 
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -709,7 +724,7 @@ class Pond {
     }
   }
   water() {
-    this.health = this.health + 25; 
+    this.health = this.health + 1.5; 
     if (this.health > 100) {
       this.health = 100;
     }
@@ -783,9 +798,12 @@ class NormalTree {
     this.leaves = []; 
   }
   update() {
-    this.health = this.health - 0.02;
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02;
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -820,7 +838,7 @@ class NormalTree {
     }
   }
   water() {
-    this.health = this.health + 25; 
+    this.health = this.health + 1; 
     if (this.health > 100) {
       this.health = 100;
     }
@@ -921,9 +939,12 @@ class CherryTree {
     this.leaves = []; 
   }
   update() {
-    this.health = this.health - 0.02; 
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02; 
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -958,7 +979,7 @@ class CherryTree {
     }
   }
   water() {
-    this.health = this.health + 25; 
+    this.health = this.health + 1; 
     if (this.health > 100) {
       this.health = 100;
     }
@@ -1059,9 +1080,12 @@ class MapleTree {
     this.leaves = []; 
   }
   update() {
-    this.health = this.health - 0.02; 
-    if (this.health < 0) {
-      this.health = 0;
+
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02; 
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -1096,7 +1120,7 @@ class MapleTree {
     }
   }
   water() {
-    this.health = this.health + 25; 
+    this.health = this.health + 1; 
     if (this.health > 100) {
       this.health = 100;
     }
@@ -1199,9 +1223,12 @@ class Flower {
     this.bees = [];   
   }
   update() {
-    this.health = this.health - 0.02; 
-    if (this.health < 0) {
-      this.health = 0;
+    // 全局未暂停时才掉血
+    if (!isSystemPaused) {
+      this.health = this.health - 0.02; 
+      if (this.health < 0) {
+        this.health = 0;
+      }
     }
 
     let imgW = this.size;
@@ -1242,7 +1269,7 @@ class Flower {
     }
   }
   water() {
-    this.health = this.health + 25; 
+    this.health = this.health + 1; 
     if (this.health > 100) {
       this.health = 100;
     }
