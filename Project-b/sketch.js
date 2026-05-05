@@ -30,7 +30,7 @@ function preload() {
   imgWildflower = loadImage('flower.png');
 
   imgBottleEmpty = loadImage('waterBottle0.png');
-  imgBottleWatering = loadImage('waterbottle.png');
+  imgBottleWatering = loadImage('waterBottle.png');
   
   soundFormats('mp3', 'ogg');
   sndLeaves = loadSound('Leaves.mp3');
